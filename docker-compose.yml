@@ -1,0 +1,19 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: shawq
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: shawq_inventory
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - shawq_inventory_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shawq -d shawq_inventory"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+volumes:
+  shawq_inventory_db:
